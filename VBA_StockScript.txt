@@ -1,0 +1,132 @@
+Sub Stock_Data()
+
+'Loop over multiple worksheet
+
+For Each ws In Worksheets
+
+    ws.Cells(1, 9).Value = "Ticker"
+
+    ws.Cells(1, 10).Value = "YearlyChange"
+
+    ws.Cells(1, 11).Value = "PercentChange"
+
+    ws.Cells(1, 12).Value = "TotalStockVolume"
+
+'Declare variables calculate yearly total, percent change, and total volume by ticker
+
+Dim i As Long
+
+Dim tickerName As String
+
+Dim openYearly As Double
+
+Dim totalVolume As Double
+
+totalVolume = 0
+
+Dim totalYearly As Double
+
+totalYearly = 0
+
+Dim percentChange As Double
+
+Dim tickerRow As Long
+
+tickerRow = 2
+
+Dim lastRow As Long
+
+lastRow = ws.Cells(Rows.Count, 1).End(xlUp).Row
+
+
+
+'Add loop
+
+For i = 2 To lastRow
+
+openYearly = ws.Cells(tickerRow, 3).Value
+
+
+
+'Add conditional
+
+    If ws.Cells(i + 1, 1).Value <> ws.Cells(i, 1).Value Then
+
+        tickerName = ws.Cells(i, 1).Value
+
+        ws.Range("I" & tickerRow).Value = tickerName
+
+    
+
+        totalYearly = totalYearly + (ws.Cells(i, 6).Value - openYearly)
+
+        ws.Range("J" & tickerRow).Value = totalYearly
+
+    
+
+        percentChange = (totalYearly / openYearly)
+
+        ws.Range("K" & tickerRow).Value = percentChange
+
+        ws.Range("K" & tickerRow).Style = "Percent"
+
+        
+
+        totalVolume = totalVolume + ws.Cells(i, 7).Value
+
+        ws.Range("L" & tickerRow).Value = totalVolume
+
+        
+
+        'Adjust ticker
+
+        tickerRow = tickerRow + 1
+
+        totalYearly = 0
+
+        totalVolume = 0
+
+        openYearly = ws.Cells(tickerRow, 3).Value
+
+    Else
+
+        totalVolume = totalVolume + ws.Cells(i, 7).Value
+
+    End If
+
+Next i
+
+
+
+'Declare variables for cell formatting
+
+Dim yearLastRow As Long
+
+yearLastRow = ws.Cells(Rows.Count, 10).End(xlUp).Row
+
+
+
+'Loop for cell formatting
+
+For i = 2 To yearLastRow
+
+
+
+'Conditional for cell formatting
+
+    If ws.Cells(i, 10).Value >= 0 Then
+
+        ws.Cells(i, 10).Interior.ColorIndex = 4
+
+    Else
+
+        ws.Cells(i, 10).Interior.ColorIndex = 3
+
+    End If
+
+Next i
+
+    
+Next ws
+
+End Sub
